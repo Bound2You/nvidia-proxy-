@@ -8,24 +8,36 @@ app = FastAPI()
 NVIDIA_API_KEY = os.getenv("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")
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 
+# DeepSeek model name on NVIDIA NIM
+# You'll need to verify the exact model name from build.nvidia.com
+DEEPSEEK_MODEL = "deepseek-ai/deepseek-v3.2"  # Update this with the correct model name
+
 @app.get("/")
 async def root():
-    return {"status": "OpenAI-compatible NVIDIA NIM Proxy is running"}
+    return {
+        "status": "OpenAI-compatible NVIDIA NIM Proxy (DeepSeek V3)",
+        "model": DEEPSEEK_MODEL,
+        "nvidia_configured": bool(NVIDIA_API_KEY)
+    }
 
 @app.post("/v1/chat/completions")
 async def chat_completions(request: Request):
     try:
         body = await request.json()
         
-        # You can map model names here if needed
-        # Example: body["model"] = "nvidia/llama-3.1-nemotron-70b-instruct"
+        # Override model with DeepSeek on NVIDIA NIM
+        # Use the exact model identifier from NVIDIA catalog
+        if body.get("model"):
+            body["model"] = DEEPSEEK_MODEL
+        else:
+            body["model"] = DEEPSEEK_MODEL
         
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 f"{NVIDIA_BASE_URL}/chat/completions",
                 json=body,
                 headers={
-                    "Authorization": f"Bearer {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}",
+                    "Authorization": f"Bearer {NVIDIA_API_KEY}",
                     "Content-Type": "application/json"
                 },
                 timeout=120.0
@@ -48,7 +60,12 @@ async def list_models():
         "object": "list",
         "data": [
             {
-                "id": "nvidia/llama-3.1-nemotron-70b-instruct",
+                "id": DEEPSEEK_MODEL,
+                "object": "model",
+                "owned_by": "nvidia"
+            },
+            {
+                "id": "deepseek-v3",
                 "object": "model",
                 "owned_by": "nvidia"
             }

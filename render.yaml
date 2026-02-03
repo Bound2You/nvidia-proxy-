@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: nvidia-proxy
+    name: nvidia-deepseek-proxy
     env: python
     runtime: python-3.11
     buildCommand: pip install -r requirements.txt
