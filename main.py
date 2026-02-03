@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-NVIDIA_API_KEY = os.getenv("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")
+NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 
 # DeepSeek model name on NVIDIA NIM
@@ -15,7 +15,7 @@ DEEPSEEK_MODEL = "deepseek-ai/deepseek-v3.2"  # Update this with the correct mod
 @app.get("/")
 async def root():
     return {
-        "status": "OpenAI-compatible NVIDIA NIM Proxy (DeepSeek V3)",
+        "status": "OpenAI-compatible NVIDIA NIM Proxy (DeepSeek V3.2)",
         "model": DEEPSEEK_MODEL,
         "nvidia_configured": bool(NVIDIA_API_KEY)
     }
