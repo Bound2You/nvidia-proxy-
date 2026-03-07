@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: nvidia-nim-proxy
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add any API keys your proxy needs, e.g.:
+      # - key: NVIDIA_API_KEY
+      #   sync: false  # means you'll set it manually in Render dashboard
